@@ -93,10 +93,11 @@ class IServer:
 import socket
 import pickle
 
-client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(''' + str((ip, port)) + ''')
 
 BUFFER_SIZE = ''' + str(self.buffer_size) + '''
+
 
 def _func_eval(func, args, kwargs):
     data = pickle.dumps((func, args, kwargs))
