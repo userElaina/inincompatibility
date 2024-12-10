@@ -32,7 +32,9 @@ if __name__ == "__main__":
         exec(_s)
         _l = _s.strip().split('\n')
         for s in _l:
-            if s.startswith('from ') and ' import ' in s or s.startswith('import '):
+            flg1 = s.startswith('from ') and ' import ' in s
+            flg2 = s.startswith('import ')
+            if flg1 or flg2:
                 if ' as ' in s:
                     s = s.split(' as ')[1]
                 else:
