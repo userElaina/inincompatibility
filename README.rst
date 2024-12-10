@@ -15,7 +15,7 @@ To install the ``inincompatibility`` package, run:
 
    pip install inincompatibility
 
-**Example: LLMs Integration**:
+**Example: Making Your LLMs Callable Like an API**:
 
 First, make your LLMs callable functions and ``import`` them into a
 ``.py`` file, like so:
