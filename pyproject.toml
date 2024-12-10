@@ -5,7 +5,7 @@ description = "A socket-based solution to address the Python environment incompa
 readme = "README.rst"
 requires-python = ">=3.7"
 license = {file = "LICENSE"}
-keywords = ["compatibility", "socket", "environment"]
+keywords = ["compatibility", "incompatibility", "socket"]
 
 authors = [{name = "userElaina", email = "userelaina@pm.me"}]
 maintainers = [{name = "userElaina", email = "userelaina@pm.me"}]
