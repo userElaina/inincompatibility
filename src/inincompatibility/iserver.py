@@ -1,4 +1,3 @@
-import os
 import socket
 import pickle
 
@@ -113,11 +112,12 @@ def ''' + name + '''(*args, **kwargs):
     return _func_eval("''' + name + '''", args, kwargs)
 '''
 
+        import os
         if os.path.exists(p):
             # raise FileExistsError('File already exists')
             pass
         else:
-            os.makedirs(os.path.dirname(p), exist_ok=True)
+            os.makedirs(os.path.dirname(os.path.abspath(p)), exist_ok=True)
         with open(p, 'wb') as f:
             f.write(s.encode('utf-8'))
         return p

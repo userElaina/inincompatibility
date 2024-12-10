@@ -1,5 +1,5 @@
 import argparse
-from iserver import IServer
+from .iserver import IServer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
