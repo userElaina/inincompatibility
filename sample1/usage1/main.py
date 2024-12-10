@@ -1,6 +1,6 @@
 import torch
 from torch import Tensor
-from to_import import *
+from to_import import getdata, calc
 
 assert str(torch.__version__).startswith('2.5')
 
