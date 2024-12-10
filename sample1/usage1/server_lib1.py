@@ -5,7 +5,7 @@ from lib1 import getdata, calc
 
 BUFFER_SIZE = 4096
 
-mian = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+mian = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 mian.bind(('0.0.0.0', 0))
 print(mian.getsockname())
 mian.listen(1)
@@ -14,6 +14,7 @@ FUNC_NAME = {
     'calc': calc,
     'getdata': getdata
 }
+
 
 def eval_from_data(b: bytes) -> bytes:
     func, args, kwargs = pickle.loads(b)
