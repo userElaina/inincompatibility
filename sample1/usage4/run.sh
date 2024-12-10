@@ -1,7 +1,7 @@
-conda activate xxx1
+conda activate py311
 conda list | grep torch
-python -m inincompatibility
+py -m inincompatibility -i to_import_bak.py -o to_import.py
 
-conda activate xxx2
+conda activate py37
 conda list | grep torch
 python main.py
