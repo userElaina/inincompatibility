@@ -30,7 +30,10 @@ class IServer:
         assert func in self.func_name
         if self.debug:
             print('_eval', func, args, kwargs)
-        res = self.func_name[func](*args, **kwargs)
+        try:
+            res = self.func_name[func](*args, **kwargs)
+        except Exception as e:
+            res = e
         return pickle.dumps(res)
 
     def add_func(self, func, name=None, ignore_err=False):
