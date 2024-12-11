@@ -1,7 +1,7 @@
 inincompatibility
 =================
 
-A ``socket``-based solution for resolving **Python** environment
+A ``socket``-based solution for resolving (**Python** / **conda**) environment
 incompatibilities.
 
 Usage Guidelines
