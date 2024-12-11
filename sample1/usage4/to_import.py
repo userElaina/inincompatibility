@@ -5,9 +5,9 @@ import socket
 import pickle
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('127.0.0.1', 51015))
+client.connect(('127.0.0.1', 47151))
 
-BUFFER_SIZE = 4096
+BUFFER_SIZE = 1048576
 
 
 def _func_eval(func, args, kwargs):
