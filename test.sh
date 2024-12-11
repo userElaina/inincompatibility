@@ -13,7 +13,7 @@ twine upload --repository testpypi dist/* --verbose
 
 conda activate py311
 conda list | grep torch
-pip install -i https://test.pypi.org/simple/ inincompatibility
+pip install --upgrade -i https://test.pypi.org/simple/ inincompatibility
 cd sample1/usage1
 py server_lib1.py
 cd ../usage2
@@ -25,7 +25,7 @@ py -m inincompatibility -i to_import_bak.py -o to_import.py
 
 conda activate py37
 conda list | grep torch
-pip install -i https://test.pypi.org/simple/ inincompatibility
+pip install --upgrade -i https://test.pypi.org/simple/ inincompatibility
 cd sample1/ori
 py main.py
 cd ../usage1
