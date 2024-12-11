@@ -20,7 +20,7 @@ if __name__ == "__main__":
     p = a.input
     op = a.output
 
-    iics = IServer(debug=True)
+    iics = IServer(debug=False)
 
     with open(p, 'rb') as f:
         _b = f.read()

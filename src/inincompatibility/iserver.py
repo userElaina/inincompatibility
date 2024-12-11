@@ -6,7 +6,7 @@ class IServer:
     def __init__(
         self,
         addr=('0.0.0.0', 0),
-        buffer_size=4096,
+        buffer_size=1024*1024,
         listen_n=1,
         debug=False
     ):
@@ -16,7 +16,7 @@ class IServer:
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(addr)
         self.addr = self.server.getsockname()
-        print(self.addr)
+        print('Server will be started at', self.addr)
         self.server.listen(listen_n)
         self.func_name = dict()
         self.add_func(eval, 'remote_eval')
@@ -29,7 +29,7 @@ class IServer:
         assert isinstance(kwargs, dict)
         assert func in self.func_name
         if self.debug:
-            print(func, args, kwargs)
+            print('_eval', func, args, kwargs)
         res = self.func_name[func](*args, **kwargs)
         return pickle.dumps(res)
 
@@ -42,8 +42,7 @@ class IServer:
             else:
                 raise ValueError('name must be specified')
         assert name not in self.func_name
-        if self.debug:
-            print(name, func)
+        print('_add_func', name, func)
         self.func_name[name] = func
 
     def add_funcs(self, *args):
@@ -64,6 +63,7 @@ class IServer:
             res = self._eval_from_data(data)
             s.sendall(res)
         s.close()
+        print('Disconnected by', addr)
 
     def join(self):
         while True:
@@ -120,4 +120,5 @@ def ''' + name + '''(*args, **kwargs):
             os.makedirs(os.path.dirname(os.path.abspath(p)), exist_ok=True)
         with open(p, 'wb') as f:
             f.write(s.encode('utf-8'))
+        print('Generated at "%s"' % p)
         return p
