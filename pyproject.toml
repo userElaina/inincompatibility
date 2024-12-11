@@ -1,7 +1,7 @@
 [project]
 name = "inincompatibility"
 version = "0.0.1"
-description = "A socket-based solution for resolving Python environment incompatibilities"
+description = "A socket-based solution for resolving (Python / conda) environment incompatibilities"
 readme = "README.rst"
 requires-python = ">=3.7"
 license = {file = "LICENSE"}
