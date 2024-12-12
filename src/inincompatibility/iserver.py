@@ -2,7 +2,10 @@ import socket
 import pickle
 
 
-def _pass(*args, **kwargs):
+def _pass(addr):
+    '''
+    >>> _pass(addr: Tuple[str, int]) -> None
+    '''
     pass
 
 
