@@ -6,12 +6,20 @@ class IServer:
     def __init__(
         self,
         addr=('0.0.0.0', 0),
-        buffer_size=1024*1024,
+        buffer_size=4096,
         listen_n=1,
-        debug=False
+        verbose=False
     ):
+        '''
+        >>> IServer(
+                addr: Tuple[str, int] = ('0.0.0.0', 0),
+                buffer_size: int = 4096,
+                listen_n: int = 1,
+                verbose: bool = False
+            ) -> IServer
+        '''
         self.buffer_size = buffer_size
-        self.debug = debug
+        self.verbose = verbose
 
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(addr)
@@ -19,16 +27,19 @@ class IServer:
         print('Server will be started at', self.addr)
         self.server.listen(listen_n)
         self.func_name = dict()
-        self.add_func(eval, 'remote_eval')
-        self.add_func(exec, 'remote_exec')
+        self.add_func(eval, '_inincompatibility_remote_eval')
+        self.add_func(exec, '_inincompatibility_remote_exec')
 
     def _eval_from_data(self, b):
+        '''
+        >>> _eval_from_data(b: bytes) -> bytes
+        '''
         func, args, kwargs = pickle.loads(b)
         assert isinstance(func, str)
         assert isinstance(args, tuple)
         assert isinstance(kwargs, dict)
         assert func in self.func_name
-        if self.debug:
+        if self.verbose:
             print('_eval', func, args, kwargs)
         try:
             res = self.func_name[func](*args, **kwargs)
@@ -36,19 +47,38 @@ class IServer:
             res = e
         return pickle.dumps(res)
 
-    def add_func(self, func, name=None, ignore_err=False):
+    def add_func(self, func, name=None, errors='strict'):
+        '''
+        >>> add_func(
+                func: Callable,
+                name: str = None,
+                errors: Literal['ignore', 'replace', 'strict'] = 'ignore'
+            ) -> None
+        '''
+        # 'ignore' 'replace' 'strict'
+        assert callable(func)
         if name is None:
-            if hasattr(func, '__name__'):
-                name = func.__name__
-            elif ignore_err:
+            name = func.__name__
+        if name in self.func_name:
+            print('Warning: Function name "%s" already exists' % name)
+            if errors == 'ignore':
                 return
+            elif errors == 'replace':
+                pass
+            elif errors == 'strict':
+                raise ValueError('Function name "%s" already exists' % name)
             else:
-                raise ValueError('name must be specified')
-        assert name not in self.func_name
-        print('_add_func', name, func)
+                raise ValueError('Invalid value for `errors`')
+        if self.verbose:
+            print('_add_func', name, func)
         self.func_name[name] = func
 
     def add_funcs(self, *args):
+        '''
+        >>> add_funcs(
+                *args: Callable | Iterable[Callable]
+            ) -> None
+        '''
         for fs in args:
             if isinstance(fs, (list, tuple)):
                 for f in fs:
@@ -56,9 +86,25 @@ class IServer:
             else:
                 self.add_func(fs)
 
+    def client_connect_callback(self, addr):
+        '''
+        >>> client_connect_callback(addr: Tuple[str, int]) -> Any
+        '''
+        pass
+
+    def client_close_callback(self, addr):
+        '''
+        >>> client_close_callback(addr: Tuple[str, int]) -> Any
+        '''
+        pass
+
     def join_client(self):
+        '''
+        >>> join_client() -> None
+        '''
         s, addr = self.server.accept()
         print('Connected by', addr)
+        self.client_connect_callback(addr)
         while True:
             data = s.recv(self.buffer_size)
             if not data:
@@ -66,20 +112,36 @@ class IServer:
             res = self._eval_from_data(data)
             s.sendall(res)
         s.close()
-        print('Disconnected by', addr)
+        print('Closed by', addr)
+        self.client_close_callback(addr)
 
     def join(self):
+        '''
+        >>> join() -> None
+        '''
         while True:
             self.join_client()
         self.close()
 
     def run(self):
+        '''
+        >>> run() -> None
+        '''
         self.join()
 
     def close(self):
-        self.server.close()
+        '''
+        >>> close() -> None
+        '''
+        return self.server.close()
 
     def gen_import_code(self, p='to_import.py', addr=None):
+        '''
+        >>> gen_import_code(
+                p: str = 'to_import.py',
+                addr: Tuple[str, int] | None = None
+            ) -> str
+        '''
         server_ip, server_port = self.addr
         if addr is None:
             ip = server_ip

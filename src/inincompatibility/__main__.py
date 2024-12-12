@@ -8,39 +8,83 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         '-i', '--input',
-        help='Original file to `import`',
+        help='Original Python file to analyze',
+        type=str,
         default='to_import.py'
     )
     parser.add_argument(
         '-o', '--output',
-        help='Generated file to `import`',
+        help='Generated Python file that can be imported',
+        type=str,
         default=''
     )
+    parser.add_argument(
+        '-a', '--addr',
+        help='ip:port',
+        type=str,
+        default='0.0.0.0:0'
+    )
+    parser.add_argument(
+        '--buffersize',
+        help='Buffer size',
+        type=int,
+        default=1048576
+    )
+    parser.add_argument(
+        '--verbose',
+        help='Verbose mode',
+        action='store_true'
+    )
+
     a = parser.parse_args()
-    p = a.input
-    op = a.output
+    _input = a.input
+    _output = a.output
+    _ip, _port = a.addr.split(':')
+    _addr = (_ip, int(_port))
+    _buffersize = a.buffersize
+    _verbose = a.verbose
 
-    iics = IServer(debug=False)
+    inincs = IServer(
+        addr=_addr,
+        buffer_size=_buffersize,
+        verbose=_verbose
+    )
 
-    with open(p, 'rb') as f:
+    with open(_input, 'rb') as f:
         _b = f.read()
+        if not _output:
+            _output = _input
+            _input = _output + '.ininc_bak.py'
+            open(_input, 'wb').write(_b)
         _s = _b.decode('utf-8')
-        if not op:
-            op = p
-            p = op + '.bak'
-            open(p, 'wb').write(_b)
         exec(_s)
-        _l = _s.strip().split('\n')
-        for s in _l:
-            flg1 = s.startswith('from ') and ' import ' in s
-            flg2 = s.startswith('import ')
-            if flg1 or flg2:
+        for s in _s.strip().split('\n'):
+            # only supports one-line `from ... import ...` statement
+            s = s.strip()
+            if s.startswith('from ') and '*' not in s:
+                assert ' import ' in s
+                if _verbose:
+                    print('Analyze line:', s)
                 if ' as ' in s:
                     s = s.split(' as ')[1]
                 else:
                     s = s.split(' import ')[1]
-                funcs = [eval(i.strip()) for i in s.split(', ')]
-                iics.add_funcs(funcs)
+                for i in s.split(','):
+                    name = i.strip()
+                    func = eval(name)
+                    if name == '_inincompatibility_client_connect_callback':
+                        inincs.client_connect_callback = func
+                        if _verbose:
+                            print('Overload client_connect_callback:', func)
+                    elif name == '_inincompatibility_client_close_callback':
+                        inincs.client_close_callback = func
+                        if _verbose:
+                            print('Overload client_close_callback:', func)
+                    else:
+                        if callable(func):
+                            inincs.add_func(func, name, 'replace')
+                        elif _verbose:
+                            print('Skip:', name)
 
-    iics.gen_import_code(op)
-    iics.run()
+    inincs.gen_import_code(_output)
+    inincs.run()
