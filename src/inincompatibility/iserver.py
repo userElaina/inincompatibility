@@ -2,6 +2,10 @@ import socket
 import pickle
 
 
+def _pass(*args, **kwargs):
+    pass
+
+
 class IServer:
     def __init__(
         self,
@@ -26,6 +30,9 @@ class IServer:
         self.addr = self.server.getsockname()
         print('Server will be started at', self.addr)
         self.server.listen(listen_n)
+
+        self.client_connect_callback = _pass
+        self.client_close_callback = _pass
         self.func_name = dict()
         self.add_func(eval, '_inincompatibility_remote_eval')
         self.add_func(exec, '_inincompatibility_remote_exec')
@@ -85,18 +92,6 @@ class IServer:
                     self.add_func(f)
             else:
                 self.add_func(fs)
-
-    def client_connect_callback(self, addr):
-        '''
-        >>> client_connect_callback(addr: Tuple[str, int]) -> Any
-        '''
-        pass
-
-    def client_close_callback(self, addr):
-        '''
-        >>> client_close_callback(addr: Tuple[str, int]) -> Any
-        '''
-        pass
 
     def join_client(self):
         '''
