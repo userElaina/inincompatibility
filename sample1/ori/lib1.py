@@ -12,3 +12,11 @@ def calc(x: Tensor, eta: Tensor) -> Tensor:
 
 def getdata(i: int) -> str:
     return data[i]
+
+
+def _inincompatibility_client_connect_callback(addr):
+    print('_inincompatibility_client_connect_callback', addr)
+
+
+def _inincompatibility_client_close_callback(addr):
+    print('_inincompatibility_client_close_callback', addr)
