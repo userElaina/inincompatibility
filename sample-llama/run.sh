@@ -4,6 +4,7 @@ conda activate llama
 # 2024.12.12 (PyTorch Stable 2.5.1)
 conda install pytorch torchvision torchaudio transformers pytorch-cuda=12.1 -c pytorch -c nvidia
 py test.py
+pip install inincompatibility
 py -m inincompatibility -i to_import_ori.py -o to_import.py --buffersize 65536 -a "0.0.0.0:0" --verbose
 
 conda create -y -n black_box_prompt_optimizer python=3.7
