@@ -1,1 +1,1 @@
-# from lib1 import getdata, calc
+from lib1 import getdata, calc
