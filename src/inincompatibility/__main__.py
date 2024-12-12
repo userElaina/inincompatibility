@@ -64,7 +64,7 @@ if __name__ == "__main__":
             if s.startswith('from ') and '*' not in s:
                 assert ' import ' in s
                 if _verbose:
-                    print('Analyze line:', s)
+                    print('Analyze line:', repr(s))
                 if ' as ' in s:
                     s = s.split(' as ')[1]
                 else:
@@ -84,7 +84,7 @@ if __name__ == "__main__":
                         if callable(func):
                             inincs.add_func(func, name, 'replace')
                         elif _verbose:
-                            print('Skip:', name)
+                            print('Skip:', func)
 
     inincs.gen_import_code(_output)
     inincs.run()

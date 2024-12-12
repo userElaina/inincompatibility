@@ -183,5 +183,5 @@ def ''' + name + '''(*args, **kwargs):
             os.makedirs(os.path.dirname(os.path.abspath(p)), exist_ok=True)
         with open(p, 'wb') as f:
             f.write(s.encode('utf-8'))
-        print('Generated at "%s"' % p)
+        print('Generated at:', repr(p))
         return p
