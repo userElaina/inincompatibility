@@ -1,4 +1,4 @@
 from .iserver import IServer
 from .iclient import IClient
 
-VERSION = 'v0.0.3a1'
+VERSION = 'v0.0.3a2'
