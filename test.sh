@@ -20,6 +20,9 @@ cd ../usage3
 py server_lib1.py
 cd ../usage4
 py -m inincompatibility -i to_import_ori.py -o to_import.py --buffersize 8192 -a "0.0.0.0:0" --verbose
+cd ../../sample-llama
+py test.py
+py -m inincompatibility -i to_import_ori.py -o to_import.py --buffersize 65536 -a "0.0.0.0:0" --verbose
 
 conda activate py37
 conda list | grep torch
@@ -31,6 +34,8 @@ py main.py
 cd ../usage3
 py main.py
 cd ../usage4
+py main.py
+cd ../../sample-llama
 py main.py
 
 conda deactivate
