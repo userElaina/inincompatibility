@@ -5,9 +5,9 @@ import socket
 import pickle
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(('127.0.0.1', 47151))
+client.connect(('127.0.0.1', 46473))
 
-BUFFER_SIZE = 1048576
+BUFFER_SIZE = 8192
 
 
 def _func_eval(func, args, kwargs):
@@ -16,12 +16,12 @@ def _func_eval(func, args, kwargs):
     return pickle.loads(client.recv(BUFFER_SIZE))
 
 
-def remote_eval(*args, **kwargs):
-    return _func_eval("remote_eval", args, kwargs)
+def _inincompatibility_remote_eval(*args, **kwargs):
+    return _func_eval("_inincompatibility_remote_eval", args, kwargs)
 
 
-def remote_exec(*args, **kwargs):
-    return _func_eval("remote_exec", args, kwargs)
+def _inincompatibility_remote_exec(*args, **kwargs):
+    return _func_eval("_inincompatibility_remote_exec", args, kwargs)
 
 
 def getdata(*args, **kwargs):
