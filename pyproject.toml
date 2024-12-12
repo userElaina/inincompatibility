@@ -1,6 +1,6 @@
 [project]
 name = "inincompatibility"
-version = "0.0.3a1"
+version = "0.0.3a2"
 description = "A dependency-free, code-less socket-based solution for resolving (Python / conda) environment incompatibilities"
 readme = "README.rst"
 requires-python = ">=3.7"
