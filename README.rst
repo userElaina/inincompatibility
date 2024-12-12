@@ -1,8 +1,8 @@
 inincompatibility
 =================
 
-A ``socket``-based solution for resolving (**Python** / **conda**) environment
-incompatibilities.
+A dependency-free, code-less ``socket``-based solution for resolving
+(**Python** / **conda**) environment incompatibilities.
 
 Usage Guidelines
 ----------------
