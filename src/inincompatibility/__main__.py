@@ -1,7 +1,9 @@
 import argparse
 from .iserver import IServer
+from . import VERSION
 
 if __name__ == "__main__":
+    print('Thanks for using inincompatibility', VERSION)
     parser = argparse.ArgumentParser(
         'inincompatibility',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter

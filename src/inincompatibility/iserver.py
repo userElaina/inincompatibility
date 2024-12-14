@@ -1,6 +1,5 @@
 import socket
 import pickle
-from . import VERSION
 
 
 def _pass(addr):
@@ -26,7 +25,6 @@ class IServer:
                 verbose: bool = False
             ) -> IServer
         '''
-        print('Welcome to inincompatibility', VERSION)
         self.buffer_size = buffer_size
         self.verbose = verbose
 
