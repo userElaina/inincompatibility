@@ -8,7 +8,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         '-i', '--input',
-        help='Original Python file to analyze',
+        help='Original Python code to analyze',
         type=str,
         default='to_import.py'
     )
@@ -35,6 +35,11 @@ if __name__ == "__main__":
         help='Verbose mode',
         action='store_true'
     )
+    parser.add_argument(
+        '--inputcode',
+        help='Input code directly',
+        action='store_true'
+    )
 
     a = parser.parse_args()
     _input = a.input
@@ -43,6 +48,7 @@ if __name__ == "__main__":
     _addr = (_ip, int(_port))
     _buffersize = a.buffersize
     _verbose = a.verbose
+    _inputcode = a.inputcode
 
     inincs = IServer(
         addr=_addr,
@@ -50,41 +56,46 @@ if __name__ == "__main__":
         verbose=_verbose
     )
 
-    with open(_input, 'rb') as f:
+    if _inputcode:
+        _s = _input
+    else:
+        f = open(_input, 'rb')
         _b = f.read()
+        f.close()
         if not _output:
             _output = _input
             _input = _output + '.ininc_bak.py'
             open(_input, 'wb').write(_b)
         _s = _b.decode('utf-8')
-        exec(_s)
-        for s in _s.strip().split('\n'):
-            # only supports one-line `from ... import ...` statement
-            s = s.strip()
-            if s.startswith('from ') and '*' not in s:
-                assert ' import ' in s
-                if _verbose:
-                    print('Analyze line:', repr(s))
-                if ' as ' in s:
-                    s = s.split(' as ')[1]
+
+    exec(_s)
+    for s in _s.strip().split('\n'):
+        # only supports one-line `from ... import ...` statement
+        s = s.strip()
+        if s.startswith('from ') and '*' not in s:
+            assert ' import ' in s
+            if _verbose:
+                print('Analyze line:', repr(s))
+            if ' as ' in s:
+                s = s.split(' as ')[1]
+            else:
+                s = s.split(' import ')[1]
+            for i in s.split(','):
+                name = i.strip()
+                func = eval(name)
+                if name == '_inincompatibility_client_connect_callback':
+                    inincs.client_connect_callback = func
+                    if _verbose:
+                        print('Overload client_connect_callback:', func)
+                elif name == '_inincompatibility_client_close_callback':
+                    inincs.client_close_callback = func
+                    if _verbose:
+                        print('Overload client_close_callback:', func)
                 else:
-                    s = s.split(' import ')[1]
-                for i in s.split(','):
-                    name = i.strip()
-                    func = eval(name)
-                    if name == '_inincompatibility_client_connect_callback':
-                        inincs.client_connect_callback = func
-                        if _verbose:
-                            print('Overload client_connect_callback:', func)
-                    elif name == '_inincompatibility_client_close_callback':
-                        inincs.client_close_callback = func
-                        if _verbose:
-                            print('Overload client_close_callback:', func)
-                    else:
-                        if callable(func):
-                            inincs.add_func(func, name, 'replace')
-                        elif _verbose:
-                            print('Skip:', func)
+                    if callable(func):
+                        inincs.add_func(func, name, 'replace')
+                    elif _verbose:
+                        print('Skip:', func)
 
     inincs.gen_import_code(_output)
     inincs.run()
