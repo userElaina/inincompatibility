@@ -60,29 +60,32 @@ if __name__ == "__main__":
 
     if _inputcode:
         _s = _input
+        exec(_s)
+        lines = _s.strip().split(';')
     else:
         f = open(_input, 'rb')
         _b = f.read()
         f.close()
+        _s = _b.decode('utf-8')
+        exec(_s)
         if not _output:
             _output = _input
             _input = _output + '.ininc_bak.py'
             open(_input, 'wb').write(_b)
-        _s = _b.decode('utf-8')
+        lines = _s.strip().split('\n')
 
-    exec(_s)
-    for s in _s.strip().split('\n'):
+    for line in lines:
         # only supports one-line `from ... import ...` statement
-        s = s.strip()
-        if s.startswith('from ') and '*' not in s:
-            assert ' import ' in s
+        line = line.strip()
+        if line.startswith('from ') and '*' not in line:
+            assert ' import ' in line
             if _verbose:
-                print('Analyze line:', repr(s))
-            if ' as ' in s:
-                s = s.split(' as ')[1]
+                print('Analyze line:', repr(line))
+            if ' as ' in line:
+                line = line.split(' as ')[1]
             else:
-                s = s.split(' import ')[1]
-            for i in s.split(','):
+                line = line.split(' import ')[1]
+            for i in line.split(','):
                 name = i.strip()
                 func = eval(name)
                 if name == '_inincompatibility_client_connect_callback':
