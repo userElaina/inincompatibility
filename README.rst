@@ -18,7 +18,7 @@ To install the ``inincompatibility`` package, run:
 **Example: Making Your LLMs Callable Like an API**:
 
 First, make your LLMs (e.g.,
-`meta-llama/Llama-3.2-1B <https://huggingface.co/meta-llama/Llama-3.2-1B>`__)
+`Llama-3.2-1B <https://huggingface.co/meta-llama/Llama-3.2-1B>`__)
 callable functions:
 
 .. code:: python

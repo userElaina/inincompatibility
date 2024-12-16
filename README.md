@@ -14,7 +14,7 @@ pip install inincompatibility
 
 **Example: Making Your LLMs Callable Like an API**:
 
-First, make your LLMs (e.g., [meta-llama/Llama-3.2-1B](https://huggingface.co/meta-llama/Llama-3.2-1B)) callable functions:
+First, make your LLMs (e.g., [Llama-3.2-1B](https://huggingface.co/meta-llama/Llama-3.2-1B)) callable functions:
 
 ```python
 # your_llm.py
