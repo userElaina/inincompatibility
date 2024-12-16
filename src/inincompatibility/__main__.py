@@ -55,7 +55,9 @@ if __name__ == "__main__":
 
     host, port = a.addr.rsplit(':', 1)
     addr = (host, int(port))
-    if a.clientaddr is not None:
+    if a.clientaddr is None:
+        clientaddr = None
+    else:
         host, port = a.clientaddr.rsplit(':', 1)
         clientaddr = (host, int(port))
     buffer_size = a.buffersize
