@@ -46,19 +46,19 @@ if __name__ == "__main__":
     a = parser.parse_args()
     _input = a.input
     _output = a.output
-    _ip, _port = a.addr.split(':')
-    _addr = (_ip, int(_port))
-    _buffersize = a.buffersize
-    _verbose = a.verbose
-    _inputcode = a.inputcode
+    host, port = a.addr.rsplit(':', 1)
+    addr = (host, int(port))
+    buffer_size = a.buffersize
+    verbose = a.verbose
+    _input_code = a.inputcode
 
     inincs = IServer(
-        addr=_addr,
-        buffer_size=_buffersize,
-        verbose=_verbose
+        addr=addr,
+        buffer_size=buffer_size,
+        verbose=verbose
     )
 
-    if _inputcode:
+    if _input_code:
         _s = _input
         exec(_s)
         lines = _s.strip().split(';')
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         line = line.strip()
         if line.startswith('from ') and '*' not in line:
             assert ' import ' in line
-            if _verbose:
+            if verbose:
                 print('Analyze line:', repr(line))
             if ' as ' in line:
                 line = line.split(' as ')[1]
@@ -90,16 +90,16 @@ if __name__ == "__main__":
                 func = eval(name)
                 if name == '_inincompatibility_client_connect_callback':
                     inincs.client_connect_callback = func
-                    if _verbose:
+                    if verbose:
                         print('Overload client_connect_callback:', func)
                 elif name == '_inincompatibility_client_close_callback':
                     inincs.client_close_callback = func
-                    if _verbose:
+                    if verbose:
                         print('Overload client_close_callback:', func)
                 else:
                     if callable(func):
                         inincs.add_func(func, name, 'replace')
-                    elif _verbose:
+                    elif verbose:
                         print('Skip:', func)
 
     inincs.gen_import_code(_output)
