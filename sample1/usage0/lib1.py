@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor
 
-assert str(torch.__version__).startswith('2.')
+assert torch.__version__.startswith('2')
 
 data = ['aaa bbb ccc'] * 100
 

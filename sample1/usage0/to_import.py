@@ -1,11 +1,14 @@
+from torch import Tensor
 from inincompatibility import IClient
 
-inincc = IClient(('localhost', 57497))
+inincc = IClient(('localhost', 57043))
 
 
-def calc(*args, **kwargs):
-    return inincc.func_eval('calc', args, kwargs)
+def calc(x: Tensor, eta: Tensor) -> Tensor:
+    # return inincc.func_eval('calc', args, kwargs)
+    return inincc.func_eval('calc', (x, eta), dict())
 
 
-def getdata(*args, **kwargs):
-    return inincc.func_eval('getdata', args, kwargs)
+def getdata(i: int) -> str:
+    # return inincc.func_eval('getdata', args, kwargs)
+    return inincc.func_eval('getdata', (i,), dict())
