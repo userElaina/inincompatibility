@@ -175,8 +175,8 @@ class IServer:
 import socket
 import pickle\n
 BUFFER_SIZE = ''' + str(self.buffer_size) + '''\n
-client = socket.socket(''' + repr(family) + ''', socket.SOCK_STREAM)
-client.connect(''' + repr(addr) + ''')\n\n
+client = socket.socket(''' + str(family) + ''', socket.SOCK_STREAM)
+client.connect(''' + str(addr) + ''')\n\n
 def _func_eval(func, args, kwargs):
     data = pickle.dumps((func, args, kwargs))
     client.sendall(data)
