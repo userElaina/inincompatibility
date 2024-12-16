@@ -5,5 +5,7 @@ cd local
 py main.py
 
 cd ..
-scp -r ubuntu@server.mil:~/blackboxllm/llm-llama sample-llama/
-scp -r ubuntu@server.mil:~/blackboxllm/blackbox sample-llama/
+scp -r ubuntu@server.mil:~/blackboxllm/llm-llama ./
+scp -r ubuntu@server.mil:~/blackboxllm/blackbox ./
+
+diff blackbox/main.py local/main.py
