@@ -27,6 +27,12 @@ if __name__ == "__main__":
         default='0.0.0.0:0'
     )
     parser.add_argument(
+        '--clientaddr',
+        help='ip:port',
+        type=str,
+        default=None
+    )
+    parser.add_argument(
         '--buffersize',
         help='Buffer size',
         type=int,
@@ -46,8 +52,12 @@ if __name__ == "__main__":
     a = parser.parse_args()
     _input = a.input
     _output = a.output
+
     host, port = a.addr.rsplit(':', 1)
     addr = (host, int(port))
+    if a.clientaddr is not None:
+        host, port = a.clientaddr.rsplit(':', 1)
+        clientaddr = (host, int(port))
     buffer_size = a.buffersize
     verbose = a.verbose
     _input_code = a.inputcode
@@ -102,5 +112,5 @@ if __name__ == "__main__":
                     elif verbose:
                         print('Skip:', func)
 
-    inincs.gen_import_code(_output)
+    inincs.gen_import_code(_output, clientaddr)
     inincs.run()
