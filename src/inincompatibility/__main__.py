@@ -39,7 +39,7 @@ if __name__ == "__main__":
         default=1048576
     )
     parser.add_argument(
-        '--listen',
+        '--listenn',
         help='listen_n',
         type=int,
         default=1
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         host, port = a.clientaddr.rsplit(':', 1)
         clientaddr = (host, int(port))
     buffer_size = a.buffersize
-    listen_n = a.listen
+    listen_n = a.listenn
     verbose = a.verbose
     _input_code = a.inputcode
 
