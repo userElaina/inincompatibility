@@ -151,13 +151,13 @@ class IServer:
             self.multi = 'threading'
         if self.multi == 'threading':
             import threading
-            for _ in self.listen_n:
+            for _ in range(self.listen_n):
                 _t = threading.Thread(target=self.run_client)
                 _t.start()
                 self.start_tp.append(_t)
         elif self.multi == 'multiprocessing':
             import multiprocessing
-            for _ in self.listen_n:
+            for _ in range(self.listen_n):
                 _p = multiprocessing.Process(target=self.run_client)
                 _p.start()
                 self.start_tp.append(_p)
