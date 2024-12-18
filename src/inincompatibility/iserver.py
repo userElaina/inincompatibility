@@ -37,6 +37,10 @@ class IServer:
         if listen_n <= 0:
             listen_n = max(listen_n + os.cpu_count(), 1)
         self.listen_n = listen_n
+
+        # multi = str(multi)
+        # if multi.lower() == 'none':
+        #     multi = None
         if listen_n > 1 and not multi:
             multi = 'threading'
         assert multi in (None, 'threading', 'multiprocessing')

@@ -39,6 +39,12 @@ if __name__ == "__main__":
         default=1048576
     )
     parser.add_argument(
+        '--listen',
+        help='listen_n',
+        type=int,
+        default=1
+    )
+    parser.add_argument(
         '--verbose',
         help='Verbose mode',
         action='store_true'
@@ -61,12 +67,14 @@ if __name__ == "__main__":
         host, port = a.clientaddr.rsplit(':', 1)
         clientaddr = (host, int(port))
     buffer_size = a.buffersize
+    listen_n = a.listen
     verbose = a.verbose
     _input_code = a.inputcode
 
     inincs = IServer(
         addr=addr,
         buffer_size=buffer_size,
+        listen_n=listen_n,
         verbose=verbose
     )
 
