@@ -1,3 +1,4 @@
+import os
 import socket
 import pickle
 
@@ -16,6 +17,7 @@ class IServer:
         family=socket.AF_INET,
         buffer_size=4096,
         listen_n=1,
+        multi=None,
         verbose=False
     ):
         '''
@@ -24,6 +26,7 @@ class IServer:
                 family: int = socket.AF_INET,
                 buffer_size: int = 4096,
                 listen_n: int = 1,
+                multi: Literal[None, 'threading', 'multiprocessing'] = None
                 verbose: bool = False
             ) -> IServer
         '''
@@ -31,10 +34,18 @@ class IServer:
         self.buffer_size = buffer_size
         self.verbose = verbose
 
+        if listen_n <= 0:
+            listen_n = max(listen_n + os.cpu_count(), 1)
+        self.listen_n = listen_n
+        if listen_n > 1 and not multi:
+            multi = 'threading'
+        assert multi in (None, 'threading', 'multiprocessing')
+        self.multi = multi
+        self.start_tp = False
+
         self.server = socket.socket(family, socket.SOCK_STREAM)
         self.server.bind(addr)
         self.addr = self.server.getsockname()
-        assert listen_n == 1  # todo: support multiple clients
         self.server.listen(listen_n)
 
         self.client_connect_callback = _pass_return_0
@@ -99,9 +110,9 @@ class IServer:
             else:
                 self.add_func(fs)
 
-    def join_client(self):
+    def run_client_once(self):
         '''
-        >>> join_client() -> int
+        >>> run_client_once() -> int
         '''
         client_socket, client_addr = self.server.accept()
         print('Connected by', client_addr)
@@ -119,21 +130,56 @@ class IServer:
         print('Closed by', client_addr)
         return self.client_close_callback(client_addr)
 
+    def run_client(self):
+        '''
+        >>> run_client() -> None
+        '''
+        while True:
+            self.run_client_once()
+
+    def start(self):
+        '''
+        >>> start() -> None
+        '''
+        print('Server started at', self.addr)
+        self.start_tp = list()
+        if self.multi is None:
+            self.multi = 'threading'
+        if self.multi == 'threading':
+            import threading
+            for _ in self.listen_n:
+                _t = threading.Thread(target=self.run_client)
+                _t.start()
+                self.start_tp.append(_t)
+        elif self.multi == 'multiprocessing':
+            import multiprocessing
+            for _ in self.listen_n:
+                _p = multiprocessing.Process(target=self.run_client)
+                _p.start()
+                self.start_tp.append(_p)
+        else:
+            raise ValueError('Invalid value for `multi`')
+
     def join(self):
         '''
         >>> join() -> None
         '''
-        print('Server started at', self.addr)
-        # print('Now you can connect to this server.')
-        while True:
-            self.join_client()
+        if not self.start_tp:
+            raise ValueError('Server not started')
+        for i in self.start_tp:
+            i.join()
         self.close()
 
     def run(self):
         '''
         >>> run() -> None
         '''
-        self.join()
+        if self.start_tp:
+            return self.join()
+        if self.multi is None:
+            return self.run_client()
+        self.start()
+        return self.join()
 
     def close(self):
         '''
@@ -148,7 +194,6 @@ class IServer:
                 addr: Tuple[str, int] | Any = None
             ) -> str
         '''
-
         family = self.family
         if addr is None:
             addr = self.addr
@@ -186,7 +231,6 @@ def _func_eval(func, args, kwargs):
 def ''' + name + '''(*args, **kwargs):
     return _func_eval(\'''' + name + '''\', args, kwargs)\n'''
 
-        import os
         if os.path.exists(p):
             # raise FileExistsError('File already exists')
             pass
