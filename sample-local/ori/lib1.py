@@ -1,22 +1,20 @@
-import torch
-from torch import Tensor
-
-assert torch.__version__.startswith('2')
-
-data = ['aaa bbb ccc'] * 100
+import sys
+# assert sys.version_info.minor >= 11
+import time
 
 
-def calc(x: Tensor, eta: Tensor) -> Tensor:
-    return torch.exp(x + eta) / (1 + torch.exp(x + eta))
-
-
-def getdata(i: int) -> str:
-    return data[i]
-
-
-def _inincompatibility_client_connect_callback(addr):
+def _inincompatibility_client_connect_callback(addr) -> int:
     print('_inincompatibility_client_connect_callback', addr)
+    return 0
 
 
-def _inincompatibility_client_close_callback(addr):
+def _inincompatibility_client_close_callback(addr) -> int:
     print('_inincompatibility_client_close_callback', addr)
+    return 0
+
+
+def time_out(t: float):
+    tl = time.time()
+    time.sleep(t)
+    tr = time.time()
+    return tr, tl

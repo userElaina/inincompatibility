@@ -1,14 +1,16 @@
 from torch import Tensor
 from inincompatibility import IClient
 
-inincc = IClient(('localhost', 57043))
+inincc = IClient(('localhost', 23333))
 
 
-def calc(x: Tensor, eta: Tensor) -> Tensor:
-    # return inincc.func_eval('calc', args, kwargs)
-    return inincc.func_eval('calc', (x, eta), dict())
+def _inincompatibility_remote_eval(*args, **kwargs):
+    return inincc.func_eval('_inincompatibility_remote_eval', args, kwargs)
 
 
-def getdata(i: int) -> str:
-    # return inincc.func_eval('getdata', args, kwargs)
-    return inincc.func_eval('getdata', (i,), dict())
+def _inincompatibility_remote_exec(*args, **kwargs) -> None:
+    inincc.func_eval('_inincompatibility_remote_exec', args, kwargs)
+
+
+def time_out(t: float) -> tuple:
+    return inincc.func_eval('time_out', (t,), dict())
