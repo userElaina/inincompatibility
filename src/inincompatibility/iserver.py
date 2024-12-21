@@ -125,7 +125,10 @@ class IServer:
             print('Closed by', client_addr)
             return self.client_close_callback(client_addr)
         while True:
-            data = client_socket.recv(self.buffer_size)
+            try:
+                data = client_socket.recv(self.buffer_size)
+            except ConnectionResetError:
+                break
             if not data:
                 break
             res = self._eval_from_data(data)
