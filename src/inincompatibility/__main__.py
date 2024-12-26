@@ -50,6 +50,11 @@ if __name__ == "__main__":
         action='store_true'
     )
     parser.add_argument(
+        '--noexception',
+        help='forwards exceptions to the client',
+        action='store_true'
+    )
+    parser.add_argument(
         '--inputcode',
         help='Input code directly',
         action='store_true'
@@ -68,6 +73,7 @@ if __name__ == "__main__":
         clientaddr = (host, int(port))
     buffer_size = a.buffersize
     listen_n = a.listenn
+    no_exception = a.noexception
     verbose = a.verbose
     _input_code = a.inputcode
 
@@ -75,6 +81,7 @@ if __name__ == "__main__":
         addr=addr,
         buffer_size=buffer_size,
         listen_n=listen_n,
+        no_exception=no_exception,
         verbose=verbose
     )
 
