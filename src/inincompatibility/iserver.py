@@ -18,6 +18,7 @@ class IServer:
         buffer_size=4096,
         listen_n=1,
         multi=None,
+        no_exception=False,
         verbose=False
     ):
         '''
@@ -33,6 +34,7 @@ class IServer:
         self.family = family
         self.buffer_size = buffer_size
         self.verbose = verbose
+        self.no_exception = no_exception
 
         if listen_n <= 0:
             listen_n = max(listen_n + os.cpu_count(), 1)
@@ -70,9 +72,13 @@ class IServer:
         if self.verbose:
             print('_eval', func, args, kwargs)
         try:
-            res = self.func_name[func](*args, **kwargs)
+            _f = self.func_name[func]
+            res = _f(*args, **kwargs)
         except Exception as e:
-            res = e
+            if self.no_exception:
+                res = e
+            else:
+                raise e
         return pickle.dumps(res)
 
     def add_func(self, func, name=None, errors='strict'):
