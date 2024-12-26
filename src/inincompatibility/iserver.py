@@ -79,6 +79,8 @@ class IServer:
                 res = e
             else:
                 raise e
+        if self.verbose:
+            print('_eval_res', res)
         return pickle.dumps(res)
 
     def add_func(self, func, name=None, errors='strict'):
