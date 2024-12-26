@@ -16,7 +16,7 @@ py server_lib1.py
 cd ../usage1
 py server_lib1.py
 cd ../usage2
-py -m inincompatibility -i "from lib1 import time_out, _inincompatibility_client_connect_callback; from lib1 import _inincompatibility_client_close_callback;" -o to_import.py -a "localhost:23333" --buffersize 4096 --listenn 0 --inputcode --verbose
+py -m inincompatibility -i "from lib1 import time_out, _inincompatibility_client_connect_callback; from lib1 import _inincompatibility_client_close_callback;" -o to_import.py -a "localhost:23333" --buffersize 4096 --listenn 0 --inputcode --verbose --noexception
 
 # console 1
 conda activate py37
